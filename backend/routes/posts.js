@@ -1,8 +1,9 @@
 const express =  require('express');
 const router = express.Router();
 const Post = require('../models/post')
+const checkAuth = require('../middleware/check-auth')
 
-router.post('', (req, res, next) => {
+router.post('',checkAuth, (req, res, next) => {
   const post = new Post({
     title:req.body.title,
     content:req.body.content
@@ -13,7 +14,7 @@ router.post('', (req, res, next) => {
   })
 })
 
-router.get('', (req,res)=> {
+router.get('',checkAuth, (req,res)=> {
   const pageSize = req.query.pageSize
   const pageIndex = req.query.pageIndex
   const postQuery = Post.find();
@@ -27,7 +28,7 @@ router.get('', (req,res)=> {
   }).then(count => {
     res.status(200).json({
       message:'success',
-      post: doc,
+      post: fetchedPost,
       count: count
     })
   })
